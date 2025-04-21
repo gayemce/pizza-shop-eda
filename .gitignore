@@ -1,0 +1,36 @@
+# Go build files
+/bin/
+/build/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go module and workspace files
+/go.sum
+/go.work
+/go.work.sum
+
+# Editor and IDE settings
+.vscode/
+.idea/
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Docker-related files
+.env
+docker-compose.override.yml
+
+# Kafka-related (local volumes, optional)
+kafka-data/
+zookeeper-data/

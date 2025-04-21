@@ -1,21 +1,20 @@
-version: '3.0'
 services:
 
   kafka:
-    image: conflentic/cp-kafka:7.4.0
+    image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
     environment:
-      CLUSTER_ID:
-      KAFKA_PROCESS_ROLES: broker, controller
+      CLUSTER_ID: ZGI1NTk0YmY3NzVjNDkSMD
+      KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_NODE_ID: 1
-      KAFKA_LISTENER: PLAINTEXT://0.0.0.0:9092, CONTROLLER://0.0.0.0:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_LISTENER_SECURİTY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT, CONTROLLER:PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CONTROLLER_QOURUM_NAMES: 1localhost:9093
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LOG_DIRS: /var/lib/kafka/data
-      KAFKA_OFFSET_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
@@ -23,11 +22,11 @@ services:
       KAFKA_LOG_RETENTION_HOURS: 2
       KAFKA_LOG_RETENTION_BYTES: 1073741824
 
-  volumes:
-    - kafka-data:/var/lib/kafka/data
-  port: 
-    - "9092:9092"
-    - "9093:9093"
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    ports: 
+      - "9092:9092"
+      - "9093:9093"
 
   order-service:
     container_name: order-service
@@ -36,16 +35,10 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "8001:8001"
-    env_file: ./order-services/.env
+    env_file: ./order-service/.env
     depends_on:
       - kafka
-    ulimit:
-      nofile:
-        soft: 65535
-        hard: 65535
-    sysctls:
-      net.core.somaxconn: 65535
-      net.ipv4.tcp_max_syn_backlog: 65535
+
 
 volumes:
   kafka-data:
