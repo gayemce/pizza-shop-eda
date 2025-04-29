@@ -5,6 +5,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gayemce/pizza-shop-eda/order-service/constants"
+	"github.com/gayemce/pizza-shop-eda/order-service/routes"
+	"github.com/gayemce/pizza-shop-eda/order-service/service"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,6 +23,8 @@ func main() {
 			"message": "service is up and runnig",
 		})
 	})
+
+	routes.RegisterRoutes(app, service.GetKafkaMessagePublisher(constants.TOPIC_ORDER))
 
 	srv := &http.Server{
 		Addr: fmt.Sprintf(":%d", 8001),

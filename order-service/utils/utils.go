@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func AppendToFile(filePath string, data interface{}) error {
@@ -33,4 +35,16 @@ func AppendToFile(filePath string, data interface{}) error {
 		return fmt.Errorf("error writing file: %v", err)
 	}
 	return nil
+}
+
+func GetId() interface{} {
+	return primitive.NewObjectID()
+}
+
+func GetIdString(objId interface{}) string {
+	id := objId.(primitive.ObjectID)
+	if id == primitive.NilObjectID {
+		return ""
+	}
+	return id.Hex()
 }
