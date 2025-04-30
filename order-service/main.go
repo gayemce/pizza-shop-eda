@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/gayemce/pizza-shop-eda/order-service/constants"
+	"github.com/gayemce/pizza-shop-eda/order-service/message-consumer"
+	"github.com/gayemce/pizza-shop-eda/order-service/repository"
 	"github.com/gayemce/pizza-shop-eda/order-service/routes"
 	"github.com/gayemce/pizza-shop-eda/order-service/service"
 	"github.com/gin-gonic/gin"
@@ -23,6 +25,13 @@ func main() {
 			"message": "service is up and runnig",
 		})
 	})
+
+	var repositories = repository.GetRepositories()
+	var OrderMessageConsumer = messageconsumer.GetOrderMessageConsumer(
+		service.GetNewKafkaConsumer(constants.TOPIC_ORDER, "order-message"),
+		*repositories,
+	)
+	go OrderMessageConsumer.StartConsuming()
 
 	routes.RegisterRoutes(app, service.GetKafkaMessagePublisher(constants.TOPIC_ORDER))
 
